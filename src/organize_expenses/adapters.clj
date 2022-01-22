@@ -3,44 +3,29 @@
             [organize-expenses.schemas.db :as s.db]
             [clj-time.core :as t]
             [clj-time.coerce :as c]
-            [organize-expenses.schemas.income :as s.income]
-            [organize-expenses.schemas.expense :as s.expense]
+            [organize-expenses.schemas.finance-record :as s.finance-record]
             )
   (:use clojure.instant)
   (:import (java.util UUID)))
 
 
 
-(s/defn wire-income->db :- s.db/income-db
-  [income :- s.income/income-in]
-  (let [{:keys [id description value created-at]} income
+(s/defn wire-finance-record->db :- s.db/finance-record-db
+  [finance-record :- s.finance-record/finance-record-in]
+  (let [{:keys [id description value type created-at]} finance-record
         created-at->date (read-instant-date created-at)
-        income-month (t/month (c/from-date created-at->date))
-        income-year (t/year (c/from-date created-at->date))]
-    {:income/id          (UUID/fromString id)
-     :income/description description
-     :income/value       value
-     :income/month       income-month
-     :income/year        income-year
-     :income/created-at  created-at->date})
+        finance-record-month (t/month (c/from-date created-at->date))
+        finance-record-year (t/year (c/from-date created-at->date))]
+    {:finance-record/id          (UUID/fromString id)
+     :finance-record/description description
+     :finance-record/value       value
+     :finance-record/month       finance-record-month
+     :finance-record/year        finance-record-year
+     :finance-record/type        (keyword type)
+     :finance-record/created-at  created-at->date})
   )
 
-(s/defn wire-expense->db :- s.db/expense-db
-  [expense :- s.expense/expense-in]
-  (let [{:keys [id description value created-at]} expense
-        created-at->date (read-instant-date created-at)
-        income-month (t/month (c/from-date created-at->date))
-        income-year (t/year (c/from-date created-at->date))]
-    {:expense/id          (UUID/fromString id)
-     :expense/description description
-     :expense/value       value
-     :expense/month       income-month
-     :expense/year        income-year
-     :expense/created-at  created-at->date})
-  )
-
-(defn db->wire-income [income-db]
-  "It receives a data structure with Income-db schema and returns an Income"
+(defn db->wire-finance-record [finance-record-db]
+  "It receives a data structure with finance-record-db schema and returns an finance-record"
   (+ 1 1))
 
-(defn wire-expense->db [] )

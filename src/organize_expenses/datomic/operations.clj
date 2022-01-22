@@ -5,80 +5,99 @@
 
 (defn upsert-one!
   "Upsert or insert one record using map"
-  [conn income]
-  (d/transact conn {:tx-data [income]}))
+  [conn finance-record]
+  (d/transact conn {:tx-data [finance-record]}))
 ;(defn upsert-one!
 ;  "Upsert or insert one record using map"
 ;  [conn {:keys [id description value created-at]}]
 ;  (println id description value created-at)
-;  (d/transact conn {:tx-data [{:income/id           id
-;                               :income/description  description
-;                               :income/value        value
-;                               :income/created-at   created-at}]}))
+;  (d/transact conn {:tx-data [{:finance-record/id           id
+;                               :finance-record/description  description
+;                               :finance-record/value        value
+;                               :finance-record/created-at   created-at}]}))
 
 (defn upsert-many!
   "Update or insert receives a connection and array of arrays"
-  [conn incomes]
-  (d/transact conn {:tx-data incomes}))
+  [conn finance-records]
+  (d/transact conn {:tx-data finance-records}))
 
 (defn retract-one!
-  "Retract all the fields based on the :income/id"
+  "Retract all the fields based on the :finance-record/id"
   [conn id]
   (try
     (d/transact conn {:tx-data
-                      [[:db/retract [:income/id id] :income/id]
-                       [:db/retract [:income/id id] :income/description]
-                       [:db/retract [:income/id id] :income/value]
-                       [:db/retract [:income/id id] :income/created-at]]})
+                      [[:db/retract [:finance-record/id id] :finance-record/id]
+                       [:db/retract [:finance-record/id id] :finance-record/description]
+                       [:db/retract [:finance-record/id id] :finance-record/value]
+                       [:db/retract [:finance-record/id id] :finance-record/month]
+                       [:db/retract [:finance-record/id id] :finance-record/year]
+                       [:db/retract [:finance-record/id id] :finance-record/type]
+                       [:db/retract [:finance-record/id id] :finance-record/created-at]]})
     (catch Exception e {})))
 
 (defn find-all!
   [db]
-  (d/q '[:find ?id ?description ?value ?month ?year ?created-at
-         :keys id description value month year created-at
+  (d/q '[:find ?id ?description ?value ?month ?year ?type ?created-at
+         :keys id description value month year ?type created-at
          :where
-         [?e :income/id ?id]
-         [?e :income/description ?description]
-         [?e :income/value ?value]
-         [?e :income/month ?month]
-         [?e :income/year ?year]
-         [?e :income/created-at ?created-at]]
+         [?e :finance-record/id ?id]
+         [?e :finance-record/description ?description]
+         [?e :finance-record/value ?value]
+         [?e :finance-record/month ?month]
+         [?e :finance-record/year ?year]
+         [?e :finance-record/type ?type]
+         [?e :finance-record/created-at ?created-at]]
        db))
 
-(defn find-description-by-year-and-month
-  [db year month]
-  (println year month)
+(defn find-all-by-type
+  [db type]
+  (d/q '[:find ?id ?description ?value ?month ?year ?type ?created-at
+         :keys id description value month year ?type created-at
+         :in $ ?type
+         :where
+         [?e :finance-record/type ?type]
+         [?e :finance-record/id ?id]
+         [?e :finance-record/description ?description]
+         [?e :finance-record/value ?value]
+         [?e :finance-record/month ?month]
+         [?e :finance-record/year ?year]
+         [?e :finance-record/created-at ?created-at]]
+       db type))
+
+(defn find-description-by-month-year-and-type
+  [db month year type]
   (d/q '[:find ?description
          :keys description
-         :in $ ?year ?month
+         :in $ ?year ?month ?type
          :where
-         [?e :income/year ?year]
-         [?e :income/month ?month]
-         [?e :income/description ?description]
-         ]
-       db year month))
+         [?e :finance-record/year ?year]
+         [?e :finance-record/month ?month]
+         [?e :finance-record/type ?type]
+         [?e :finance-record/description ?description]]
+       db year month type))
+
 
 (defn find-by-id!
   "Will return only entities that have all the fields specified in the where
-  That is, if they don't have :income/description they will be ignored"
+  That is, if they don't have :finance-record/description they will be ignored"
   [db id]
   (-> (d/q '[:find ?id ?description ?value ?created-at
              :keys id description value created-at
              :in $ ?id
              :where
-             [?e :income/id ?id]
-             [?e :income/description ?description]
-             [?e :income/value ?value]
-             [?e :income/created-at ?created-at]]
+             [?e :finance-record/id ?id]
+             [?e :finance-record/description ?description]
+             [?e :finance-record/value ?value]
+             [?e :finance-record/created-at ?created-at]]
            db id)
       first))
 
 (defn pull-by-id!
-  "Will return all the entity that has :income/id even if they don't have :income/description"
+  "Will return all the entity that has :finance-record/id even if they don't have :finance-record/description"
   [db id]
   (-> (d/q '[:find (pull ?e [*])
              :in $ ?id
              :where
-             [?e :income/id ?id]]
+             [?e :finance-record/id ?id]]
            db id)
       first first))

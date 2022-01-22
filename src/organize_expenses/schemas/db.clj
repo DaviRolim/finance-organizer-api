@@ -1,13 +1,13 @@
 (ns organize-expenses.schemas.db
   (:require [schema.core :as s]))
 
-(def income-db
-  {:income/id           s/Uuid
-   :income/description  s/Str
-   :income/value        s/Num
-   :income/month        s/Num
-   :income/year         s/Num
-   :income/created-at   s/Inst})
+(def finance-record-db
+  {:finance-record/id           s/Uuid
+   :finance-record/description  s/Str
+   :finance-record/value        s/Num
+   :finance-record/month        s/Num
+   :finance-record/year         s/Num
+   :finance-record/created-at   s/Inst})
 
 
 (def expense-db

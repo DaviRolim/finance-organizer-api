@@ -2,8 +2,7 @@
   (:require [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [com.stuartsierra.component :as component]
-            [organize-expenses.ports.http_in.income :as httpin.income]
-            [organize-expenses.ports.http_in.expense :as httpin.expense]
+            [organize-expenses.ports.http_in :as http-in]
             ))
 
 
@@ -14,22 +13,17 @@
     (println "Starting Routes")
     (let [routes
           (route/expand-routes
-            #{["/incomes" :get httpin.income/get-income-history :route-name :list-incomes]
-              ["/income" :post [(body-params/body-params) httpin.income/save-income!] :route-name :save-income]
-              ["/income" :patch [(body-params/body-params) httpin.income/update-income!] :route-name :update-income]
-              ["/income/:id" :get [httpin.income/get-income-detail] :route-name :get-income]
-              ["/income/:id" :delete [httpin.income/delete-income-entry!] :route-name :delete-income]
-              ["/expenses" :get httpin.expense/get-income-history :route-name :list-incomes]
-              ["/expense" :post [(body-params/body-params) httpin.expense/save-income!] :route-name :save-income]
-              ["/expense" :patch [(body-params/body-params) httpin.expense/update-income!] :route-name :update-income]
-              ["/expense/:id" :get [httpin.expense/get-income-detail] :route-name :get-income]
-              ["/expense/:id" :delete [httpin.expense/delete-income-entry!] :route-name :delete-income]
+            #{["/finance-records/:type" :get http-in/get-finance-record-history :route-name :list-finance-records]
+              ["/finance-record" :post [(body-params/body-params) http-in/save-finance-record!] :route-name :save-finance-record]
+              ["/finance-record" :patch [(body-params/body-params) http-in/update-finance-record!] :route-name :update-finance-record]
+              ["/finance-record/:id" :get [http-in/get-finance-record-detail] :route-name :get-finance-record]
+              ["/finance-record/:id" :delete [http-in/delete-finance-record-entry!] :route-name :delete-finance-record]
               }
             )]
-      (assoc this :routes routes) ))
+      (assoc this :routes routes)))
   (stop [this]
     (println "Stppping Routes")
     (dissoc this :routes)))
 
-(defn new-routes []
-  (->Routes))
+  (defn new-routes []
+    (->Routes))

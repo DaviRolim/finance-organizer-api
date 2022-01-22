@@ -21,66 +21,43 @@
 (defn get-conn [client name]
   (d/connect client {:db-name name}))
 
-(def income-schema
-  [{:db/ident :income/id
+(def finance-record-schema
+  [{:db/ident :finance-record/id
     :db/unique :db.unique/identity
     :db/valueType :db.type/uuid
     :db/cardinality :db.cardinality/one
-    :db/doc "ID of the income record"}
-   {:db/ident :income/description
+    :db/doc "ID of the finance-record record"}
+   {:db/ident :finance-record/description
     :db/valueType :db.type/string
     :db/cardinality :db.cardinality/one
-    :db/doc "Description of the income record"}
-   {:db/ident :income/value
+    :db/doc "Description of the finance-record record"}
+   {:db/ident :finance-record/value
     :db/valueType :db.type/float
     :db/cardinality :db.cardinality/one
-    :db/doc "Value of the income record"}
-   {:db/ident :income/month
+    :db/doc "Value of the finance-record record"}
+   {:db/ident :finance-record/month
     :db/valueType :db.type/long
     :db/cardinality :db.cardinality/one
-    :db/doc "MOnth of the income record"}
-   {:db/ident :income/year
+    :db/doc "Month of the finance-record record"}
+   {:db/ident :finance-record/year
     :db/valueType :db.type/long
     :db/cardinality :db.cardinality/one
-    :db/doc "Year of the income record"}
-   {:db/ident :income/created-at
+    :db/doc "Year of the finance-record record"}
+   {:db/ident :finance-record/type
+    :db/valueType :db.type/keyword
+    :db/cardinality :db.cardinality/one
+    :db/doc "Type (:income or :expense) of the finance-record record"}
+   {:db/ident :finance-record/created-at
     :db/valueType :db.type/instant
     :db/cardinality :db.cardinality/one
-    :db/doc "timestamp of the income record"}])
+    :db/doc "timestamp of the finance-record record"}])
 
-(def expense-schema
-  [{:db/ident :expense/id
-    :db/unique :db.unique/identity
-    :db/valueType :db.type/uuid
-    :db/cardinality :db.cardinality/one
-    :db/doc "ID of the expense record"}
-   {:db/ident :expense/description
-    :db/valueType :db.type/string
-    :db/cardinality :db.cardinality/one
-    :db/doc "Description of the expense record"}
-   {:db/ident :expense/value
-    :db/valueType :db.type/float
-    :db/cardinality :db.cardinality/one
-    :db/doc "Value of the expense record"}
-   {:db/ident :expense/month
-    :db/valueType :db.type/long
-    :db/cardinality :db.cardinality/one
-    :db/doc "Value of the expense record"}
-   {:db/ident :expense/year
-    :db/valueType :db.type/long
-    :db/cardinality :db.cardinality/one
-    :db/doc "Value of the expens record"}
-   {:db/ident :expense/created-at
-    :db/valueType :db.type/instant
-    :db/cardinality :db.cardinality/one
-    :db/doc "timestamp of the expense record"}])
 
 (defn start-db-schemas [conn]
   "Im using in memory db so I have to initialize the schema every time I start the application"
-  (d/transact conn {:tx-data income-schema})
-  (d/transact conn {:tx-data expense-schema}) )
+  (d/transact conn {:tx-data finance-record-schema}))
 
-;(d/transact conn {:tx-data income-schema})
+;(d/transact conn {:tx-data finance-record-schema})
 ;(d/transact conn {:tx-data expense-schema})
 
 ;(defn delete-database []
