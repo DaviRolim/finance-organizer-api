@@ -11,6 +11,7 @@
                  [io.pedestal/pedestal.route "0.5.9"]
                  [io.pedestal/pedestal.jetty "0.5.9"]
                  [cheshire "5.10.1"]
+                 [org.clojure/data.json "2.4.0"]
                  [org.slf4j/slf4j-simple "1.7.32"]
                  [prismatic/schema "1.2.0"]
                  [prismatic/schema-generators "0.1.3"]

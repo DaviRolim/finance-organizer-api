@@ -27,5 +27,5 @@
 
 (defn db->wire-finance-record [finance-record-db]
   "It receives a data structure with finance-record-db schema and returns an finance-record"
-  (+ 1 1))
+  (dissoc finance-record-db :month :year))
 

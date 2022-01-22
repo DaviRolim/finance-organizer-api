@@ -1,6 +1,7 @@
 (ns organize-expenses.ports.http_in
   (:require [organize-expenses.adapters :as adapters]
-            [organize-expenses.controller :as controller])
+            [organize-expenses.controller :as controller]
+            [clojure.data.json :as json])
   (:use clojure.pprint)
   (:import (java.util UUID)))
 
@@ -8,8 +9,8 @@
   (let [db (:db request)
         type (get-in request [:path-params :type])
         finance-records (controller/get-all-finance-records db type)
-        result finance-records]     ;(map adapters/db->wire-finance-record finance-records)
-    {:status 200 :body result}))
+        result (map adapters/db->wire-finance-record finance-records)]     ;(map adapters/db->wire-finance-record finance-records)
+    {:status 200 :body result :headers {"Content-Type" "application/json"}}))
 
 (defn get-finance-record-detail [request]
   (let [db (:db request)

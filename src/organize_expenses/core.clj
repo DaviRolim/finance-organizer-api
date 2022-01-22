@@ -3,7 +3,7 @@
             [organize-expenses.components.server :as server-component]
             [organize-expenses.components.routes :as routes-component]
             [organize-expenses.components.db :as db-component]
-            [clojure.edn :as edn])
+            [clojure.data.json :as json])
   (:gen-class)
   (:import (java.util Date UUID)))
 
@@ -30,11 +30,11 @@
   [& _args]
   (start-system! (build-system-map)))
 
-
+;(-main)
 ;; Below some data to test using REPL (dev)
 ;(def uuid (UUID/randomUUID))
 ;(def finance-record-income
-;  {:id          (UUID/randomUUID)
+;  {
 ;   :description "Salary"
 ;   :value       9822.28
 ;   :type        "income"
@@ -50,8 +50,8 @@
 ; Testing Post
 ;(server-component/test-request-with-body (:server @system-atom) :post "/finance-record" finance-record-income)
 ;(server-component/test-request-with-body (:server @system-atom) :post "/finance-record" finance-record-expense)
-;;;;; Testing Get
-;(edn/read-string
+; Testing Get
+;(json/read-str
 ;  (:body (server-component/test-request (:server @system-atom) :get "/finance-records/income")))
 ;;; Testing Patch
 ;(server-component/test-request-with-body (:server @system-atom) :patch "/finance-record" finance-record-income)

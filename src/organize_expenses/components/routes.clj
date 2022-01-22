@@ -3,8 +3,24 @@
             [io.pedestal.http.body-params :as body-params]
             [com.stuartsierra.component :as component]
             [organize-expenses.ports.http_in :as http-in]
-            ))
+            [clojure.data.json :as json]))
 
+(def coerce-body
+  {:name ::coerce-body
+   :leave
+   (fn [context]
+     (let [accepted (get-in context [:request :accept :field] "application/json")
+           response (get context :response)
+           body (get response :body)
+           coerced-body (case accepted
+                          "text/html" body
+                          "text/plain" body
+                          "application/edn" (pr-str body)
+                          "application/json" (json/write-str body))
+           updated-response (assoc response
+                              :headers {"Content-Type" accepted}
+                              :body coerced-body)]
+       (assoc context :response updated-response)))})
 
 (defrecord Routes []
   component/Lifecycle
@@ -13,11 +29,11 @@
     (println "Starting Routes")
     (let [routes
           (route/expand-routes
-            #{["/finance-records/:type" :get http-in/get-finance-record-history :route-name :list-finance-records]
-              ["/finance-record" :post [(body-params/body-params) http-in/save-finance-record!] :route-name :save-finance-record]
-              ["/finance-record" :patch [(body-params/body-params) http-in/update-finance-record!] :route-name :update-finance-record]
-              ["/finance-record/:id" :get [http-in/get-finance-record-detail] :route-name :get-finance-record]
-              ["/finance-record/:id" :delete [http-in/delete-finance-record-entry!] :route-name :delete-finance-record]
+            #{["/finance-records/:type" :get [coerce-body http-in/get-finance-record-history] :route-name :list-finance-records]
+              ["/finance-record" :post [coerce-body (body-params/body-params) http-in/save-finance-record!] :route-name :save-finance-record]
+              ["/finance-record" :patch [coerce-body (body-params/body-params) http-in/update-finance-record!] :route-name :update-finance-record]
+              ["/finance-record/:id" :get [coerce-body http-in/get-finance-record-detail] :route-name :get-finance-record]
+              ["/finance-record/:id" :delete [coerce-body http-in/delete-finance-record-entry!] :route-name :delete-finance-record]
               }
             )]
       (assoc this :routes routes)))
