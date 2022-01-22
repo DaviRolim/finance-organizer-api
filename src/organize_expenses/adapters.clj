@@ -12,11 +12,11 @@
 
 (s/defn wire-finance-record->db :- s.db/finance-record-db
   [finance-record :- s.finance-record/finance-record-in]
-  (let [{:keys [id description value type created-at]} finance-record
+  (let [{:keys [description value type created-at]} finance-record
         created-at->date (read-instant-date created-at)
         finance-record-month (t/month (c/from-date created-at->date))
         finance-record-year (t/year (c/from-date created-at->date))]
-    {:finance-record/id          (UUID/fromString id)
+    {:finance-record/id          (UUID/randomUUID)
      :finance-record/description description
      :finance-record/value       value
      :finance-record/month       finance-record-month

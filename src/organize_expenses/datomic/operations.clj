@@ -52,7 +52,7 @@
 (defn find-all-by-type
   [db type]
   (d/q '[:find ?id ?description ?value ?month ?year ?type ?created-at
-         :keys id description value month year ?type created-at
+         :keys id description value month year type created-at
          :in $ ?type
          :where
          [?e :finance-record/type ?type]
