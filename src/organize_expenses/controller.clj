@@ -17,7 +17,12 @@
   (db.ops/find-by-id! db id))
 
 (defn add-finance-record-db! [db conn finance-record]
-  (let [duplicated? (logic/duplicated-description-same-month db finance-record)]
+  (let [description (:finance-record/description finance-record)
+        year (:finance-record/year finance-record)
+        month (:finance-record/month finance-record)
+        type (:finance-record/type finance-record)
+        descriptions-this-month (db.ops/find-description-by-month-year-and-type db month year type)
+        duplicated? (logic/duplicated-description-same-month? description descriptions-this-month)]
     (when-not duplicated? (db.ops/upsert-one! conn finance-record))))
 
 (defn remove-finance-record-db! [conn id]
@@ -28,12 +33,5 @@
 
 (defn get-month-summary [db month year]                     ;; TODO Move this to the logic namespace
   (let [all-incomes (get-all-finance-records-type-month-year db :income month year)
-        all-expenses (get-all-finance-records-type-month-year db :expense month year)
-        total-income-month (apply + (map :value all-incomes))
-        total-expenses-month (apply + (map :value all-expenses))
-        final-balance (- total-income-month total-expenses-month)
-        grouped-category (mapv (fn [[k,v]] {k (reduce + (map :value v))}) (group-by :category all-expenses))
-        ] {:total-income total-income-month
-           :total-expenses total-expenses-month
-           :final-balance final-balance
-           :grouped-category grouped-category}))
+        all-expenses (get-all-finance-records-type-month-year db :expense month year)]
+    (logic/summary-report all-incomes all-expenses)))

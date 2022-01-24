@@ -10,14 +10,15 @@ If you want to play around you'll need to have Leiningen and Clojure installed.
 The standalone is on the target folder  
 To generate a target folder you can run `lein uberjar`
 
-$ java -jar organize-expenses-0.1.0-standalone.jar [args]
+$ java -jar organize-expenses-0.1.0-standalone.jar [args]   
 
-## Options
+Or run locally with `lein run`
 
-FIXME: listing of options this app accepts.
+## Tests
+
+`lein test`
 
 ## Examples
-
 
 ### POST
 
