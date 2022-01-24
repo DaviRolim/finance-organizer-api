@@ -8,4 +8,5 @@
    :description s/Str
    :value s/Num
    :type s/Str
-   :created-at s/Inst})
+   :category s/Str
+   })

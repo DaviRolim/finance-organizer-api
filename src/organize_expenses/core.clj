@@ -30,6 +30,12 @@
   [& _args]
   (start-system! (build-system-map)))
 
+;(defn find-by-description
+;  [db description]
+;  (d/q '[:find ?id ?description ?value ?month ?year ?type ?created-at
+;         :in $ ?search
+;         :where [(fulltext $ :finance-record/description ?search) [[?id ?description ?value ?month ?year ?type ?created-at]]]]))
+
 ;(-main)
 ;; Below some data to test using REPL (dev)
 ;(def uuid (UUID/randomUUID))

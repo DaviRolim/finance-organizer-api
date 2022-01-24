@@ -47,6 +47,10 @@
     :db/valueType :db.type/keyword
     :db/cardinality :db.cardinality/one
     :db/doc "Type (:income or :expense) of the finance-record record"}
+   {:db/ident :finance-record/category
+    :db/valueType :db.type/keyword
+    :db/cardinality :db.cardinality/one
+    :db/doc "Category (:food, :health, :home, :transport, :education, :leisure, :unforeseen, :others) of the finance-record record"}
    {:db/ident :finance-record/created-at
     :db/valueType :db.type/instant
     :db/cardinality :db.cardinality/one

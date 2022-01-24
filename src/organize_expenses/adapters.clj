@@ -6,23 +6,25 @@
             [organize-expenses.schemas.finance-record :as s.finance-record]
             )
   (:use clojure.instant)
-  (:import (java.util UUID)))
+  (:import (java.util UUID Date)))
 
 
 
 (s/defn wire-finance-record->db :- s.db/finance-record-db
   [finance-record :- s.finance-record/finance-record-in]
-  (let [{:keys [description value type created-at]} finance-record
-        created-at->date (read-instant-date created-at)
-        finance-record-month (t/month (c/from-date created-at->date))
-        finance-record-year (t/year (c/from-date created-at->date))]
-    {:finance-record/id          (UUID/randomUUID)
+  (let [{:keys [id description value type category]} finance-record
+        created-at (new Date)
+        finance-record-month (t/month (c/from-date created-at))
+        finance-record-year (t/year (c/from-date created-at))
+        category-or-default (if category (keyword category) :other)]
+    {:finance-record/id          id
      :finance-record/description description
      :finance-record/value       value
      :finance-record/month       finance-record-month
      :finance-record/year        finance-record-year
      :finance-record/type        (keyword type)
-     :finance-record/created-at  created-at->date})
+     :finance-record/category    category-or-default
+     :finance-record/created-at  created-at})
   )
 
 (defn db->wire-finance-record [finance-record-db]

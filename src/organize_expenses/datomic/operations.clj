@@ -51,8 +51,8 @@
 
 (defn find-all-by-type
   [db type]
-  (d/q '[:find ?id ?description ?value ?month ?year ?type ?created-at
-         :keys id description value month year type created-at
+  (d/q '[:find ?id ?description ?value ?month ?year ?type ?category ?created-at
+         :keys id description value month year type category created-at
          :in $ ?type
          :where
          [?e :finance-record/type ?type]
@@ -61,8 +61,25 @@
          [?e :finance-record/value ?value]
          [?e :finance-record/month ?month]
          [?e :finance-record/year ?year]
+         [?e :finance-record/category ?category]
          [?e :finance-record/created-at ?created-at]]
        db type))
+
+(defn find-all-by-type-month-year
+  [db type month year]
+  (d/q '[:find ?id ?description ?value ?month ?year ?type ?category ?created-at
+         :keys id description value month year type category created-at
+         :in $ ?month ?year ?type
+         :where
+         [?e :finance-record/type ?type]
+         [?e :finance-record/id ?id]
+         [?e :finance-record/description ?description]
+         [?e :finance-record/value ?value]
+         [?e :finance-record/category ?category]
+         [?e :finance-record/month ?month]
+         [?e :finance-record/year ?year]
+         [?e :finance-record/created-at ?created-at]]
+       db month year type))
 
 (defn find-description-by-month-year-and-type
   [db month year type]
@@ -76,6 +93,22 @@
          [?e :finance-record/description ?description]]
        db year month type))
 
+(defn find-by-description
+  [db type search]
+  (d/q '[:find ?id ?description ?value ?month ?year ?type ?category ?created-at
+         :keys id description value month year type category created-at
+         :in $ ?type ?search
+         :where [?e :finance-record/description ?description]
+         [(.contains ^String ?description ?search)]
+         [?e :finance-record/type ?type]
+         [?e :finance-record/id ?id]
+         [?e :finance-record/value ?value]
+         [?e :finance-record/month ?month]
+         [?e :finance-record/year ?year]
+         [?e :finance-record/category ?category]
+         [?e :finance-record/created-at ?created-at]
+         ]
+       db type search))
 
 (defn find-by-id!
   "Will return only entities that have all the fields specified in the where

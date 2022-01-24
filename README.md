@@ -18,7 +18,79 @@ FIXME: listing of options this app accepts.
 
 ## Examples
 
-...
+
+### POST
+
+Request to `http://localhost:8890/finance-record`.
+
+Body income`
+{
+"description": "salary",
+"value": 2500.90,
+"type": "income"
+}.  
+`
+
+Body expense (category is optional)`
+{
+"description": "iFood",
+"value": 800.90,
+"type": "expense",
+"category": "food"
+}
+`
+
+Returns`
+{
+"payload": {
+"description": "salary",
+"value": 1200.9,
+"type": "income",
+"id": "c56a21df-d242-45b4-aa4d-69cc40c5611a"
+},
+"message": "Entry saved"
+}
+`
+### GET
+
+Request to `http://localhost:8890/finance-records/<expense or income>`.
+
+Request to `http://localhost:8890/finance-records/<expense or income>?description=search`.
+
+Request to `http://localhost:8890/finance-records/<expense or income>/<year>/<month>`.
+
+**Summary of the month** `http://localhost:8890/summary/<year>/<month>`
+
+
+### PATCH
+
+Request to `http://localhost:8890/finance-record/<id>`.
+Body income`
+{
+"description": "salary",
+"value": 4000.90,
+"type": "income"
+}.  
+`
+
+
+Returns`
+{
+"payload": {
+"description": "salary",
+"value": 4000.9,
+"type": "income",
+"id": "c56a21df-d242-45b4-aa4d-69cc40c5611a"
+},
+"message": "Entry updated"
+}
+`
+
+
+### DELETE
+
+Request to `http://localhost:8890/finance-record/<id-to-be-deleted>`.
+
 
 ### Bugs
 

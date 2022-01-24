@@ -30,10 +30,12 @@
     (let [routes
           (route/expand-routes
             #{["/finance-records/:type" :get [coerce-body http-in/get-finance-record-history] :route-name :list-finance-records]
+              ["/finance-records/:type/:year/:month" :get [coerce-body http-in/get-finance-records-month] :route-name :list-finance-records-by-month]
               ["/finance-record" :post [coerce-body (body-params/body-params) http-in/save-finance-record!] :route-name :save-finance-record]
-              ["/finance-record" :patch [coerce-body (body-params/body-params) http-in/update-finance-record!] :route-name :update-finance-record]
+              ["/finance-record/:id" :patch [coerce-body (body-params/body-params) http-in/update-finance-record!] :route-name :update-finance-record]
               ["/finance-record/:id" :get [coerce-body http-in/get-finance-record-detail] :route-name :get-finance-record]
               ["/finance-record/:id" :delete [coerce-body http-in/delete-finance-record-entry!] :route-name :delete-finance-record]
+              ["/summary/:year/:month" :get [coerce-body http-in/get-summary] :route-name :summary]
               }
             )]
       (assoc this :routes routes)))
