@@ -31,7 +31,7 @@
 (defn update-finance-record-db! [conn finance-record]
   (db.ops/upsert-one! conn finance-record))
 
-(defn get-month-summary [db month year]                     ;; TODO Move this to the logic namespace
+(defn get-month-summary [db month year]
   (let [all-incomes (get-all-finance-records-type-month-year db :income month year)
         all-expenses (get-all-finance-records-type-month-year db :expense month year)]
     (logic/summary-report all-incomes all-expenses)))

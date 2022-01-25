@@ -10,6 +10,8 @@
    :finance-record/created-at   s/Inst})
 
 
+
+
 (def expense-db
   {:expense/id          s/Uuid
    :expense/description s/Str

@@ -10,15 +10,6 @@
             [schema.core :as s])
   (:use clojure.pprint))
 
-(s/def PosNum (s/constrained s/Num #(>= % 0) 'bigger-than-zero))
-
-(def financial-record
-  {:id s/Uuid
-   :value PosNum
-   :description s/Str
-   :type (s/enum :income :expense)
-   :category (s/enum :other :food :transport :tech :house)
-   })
 
 ;; Testing using generators
 (defspec test-duplicated-description-same-month-gen 20

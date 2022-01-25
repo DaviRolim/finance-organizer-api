@@ -12,7 +12,7 @@
         finance-records (if-not description
                           (controller/get-all-finance-records db type)
                           (controller/get-all-finance-records-by-description db type description))
-        result (map adapters/db->wire-finance-record finance-records)]     ;(map adapters/db->wire-finance-record finance-records)
+        result (map adapters/db->wire-finance-record finance-records)]
     {:status 200 :body result :headers {"Content-Type" "application/json"}}))
 
 (defn get-finance-records-month [request]
@@ -21,7 +21,7 @@
         month (get-in request [:path-params :month])
         year (get-in request [:path-params :year])
         finance-records (controller/get-all-finance-records-type-month-year db type month year)
-        result (map adapters/db->wire-finance-record finance-records)]     ;(map adapters/db->wire-finance-record finance-records)
+        result (map adapters/db->wire-finance-record finance-records)]
     {:status 200 :body result :headers {"Content-Type" "application/json"}}))
 
 
@@ -63,7 +63,6 @@
   (let [db (:db request)
         month (get-in request [:path-params :month])
         year (get-in request [:path-params :year])
-        finance-records (controller/get-month-summary db month year)
-        ]     ;(map adapters/db->wire-finance-record finance-records)
-    {:status 200 :body finance-records :headers {"Content-Type" "application/json"}}))
+        summary (controller/get-month-summary db month year)]
+    {:status 200 :body summary :headers {"Content-Type" "application/json"}}))
 
