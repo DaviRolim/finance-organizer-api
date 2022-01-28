@@ -4,7 +4,7 @@
             [com.stuartsierra.component :as component]
             [organize-expenses.ports.http_in :as http-in]
             [clojure.data.json :as json]))
-
+;; TODO Put this on my ports ns and import on the server component (route
 (def coerce-body
   {:name ::coerce-body
    :leave

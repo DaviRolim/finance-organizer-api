@@ -94,7 +94,6 @@ Returns`
 
 Request to `http://localhost:8890/finance-record/<id-to-be-deleted>`.
 
-
 ### Bugs
 
 ...

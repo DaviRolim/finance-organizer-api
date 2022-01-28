@@ -7,9 +7,12 @@
             [schema-generators.generators :as g]
             [schema-generators.complete :as c]
             [matcher-combinators.test :refer :all]
+            [organize-expenses.schemas.finance-record :as wire-in]
+            [schema.test]
             [schema.core :as s])
   (:use clojure.pprint))
 
+(use-fixtures :once schema.test/validate-schemas)
 
 ;; Testing using generators
 (defspec test-duplicated-description-same-month-gen 20
@@ -25,10 +28,10 @@
 
 ;; Testing border (edge) cases
 (deftest test-summary-report
-  (let [income1 (c/complete {:value 4000.0 :type :income} financial-record)
-        income2 (c/complete {:value 3000.0 :type :income} financial-record)
-        expense1 (c/complete {:value 800.0 :type :expense :category :food} financial-record)
-        expense2 (c/complete {:value 500.0 :type :expense :category :transport} financial-record)]
+  (let [income1 (c/complete {:value 4000.0 :type :income} wire-in/wire-in)
+        income2 (c/complete {:value 3000.0 :type :income} wire-in/wire-in)
+        expense1 (c/complete {:value 800.0 :type :expense :category :food} wire-in/wire-in)
+        expense2 (c/complete {:value 500.0 :type :expense :category :transport} wire-in/wire-in)]
     (testing "total income and total expense are correctly displayed if the list is not null"
       (is (match? {:total-income 7000.0, :total-expenses 1300.0}
                   (summary-report [income1 income2] [expense1 expense2]))))

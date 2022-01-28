@@ -1,11 +1,6 @@
 (ns organize-expenses.datomic.dev-config
   (:require [datomic.client.api :as d]))
 ;
-;(def client (d/client {:server-type :dev-local
-;                       :storage-dir :mem
-;                       :system "api-finance"}))
-;(d/create-database client {:db-name "finance"})
-;(def conn (d/connect client {:db-name "finance"}))
 
 (defn get-client []
   (d/client {:server-type :dev-local

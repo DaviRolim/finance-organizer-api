@@ -31,6 +31,7 @@
                        [:db/retract [:finance-record/id id] :finance-record/value]
                        [:db/retract [:finance-record/id id] :finance-record/month]
                        [:db/retract [:finance-record/id id] :finance-record/year]
+                       [:db/retract [:finance-record/id id] :finance-record/category]
                        [:db/retract [:finance-record/id id] :finance-record/type]
                        [:db/retract [:finance-record/id id] :finance-record/created-at]]})
     (catch Exception e {})))
@@ -65,6 +66,22 @@
          [?e :finance-record/created-at ?created-at]]
        db type))
 
+;(defn find-all-by-type-using-pull                           ; includes the datom entity ID
+;  [db type]
+;  (d/q '[:find (pull ?e [*])    ;; instead of using * I could specify the fields [:/finance-record/id...]
+;         ;:keys id description value month year type category created-at
+;         :in $ ?type
+;         :where
+;         [?e :finance-record/type ?type]
+;         [?e :finance-record/id ?id]
+;         [?e :finance-record/description ?description]
+;         [?e :finance-record/value ?value]
+;         [?e :finance-record/month ?month]
+;         [?e :finance-record/year ?year]
+;         [?e :finance-record/category ?category]
+;         [?e :finance-record/created-at ?created-at]]
+;       db type))
+
 (defn find-all-by-type-month-year
   [db type month year]
   (d/q '[:find ?id ?description ?value ?month ?year ?type ?category ?created-at
@@ -82,6 +99,7 @@
        db month year type))
 
 (defn find-description-by-month-year-and-type
+  ;; TODO add adapter in receiving the finance record and returning month year and type
   [db month year type]
   (d/q '[:find ?description
          :keys description
@@ -91,7 +109,9 @@
          [?e :finance-record/month ?month]
          [?e :finance-record/type ?type]
          [?e :finance-record/description ?description]]
-       db year month type))
+       db year month type)
+  ;; TODO add adapter out to map the datomic response to domain entity
+  )
 
 (defn find-by-description
   [db type search]

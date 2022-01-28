@@ -12,7 +12,7 @@
         finance-records (if-not description
                           (controller/get-all-finance-records db type)
                           (controller/get-all-finance-records-by-description db type description))
-        result (map adapters/db->wire-finance-record finance-records)]
+        result (map adapters/internal->wire finance-records)]
     {:status 200 :body result :headers {"Content-Type" "application/json"}}))
 
 (defn get-finance-records-month [request]
@@ -21,7 +21,7 @@
         month (get-in request [:path-params :month])
         year (get-in request [:path-params :year])
         finance-records (controller/get-all-finance-records-type-month-year db type month year)
-        result (map adapters/db->wire-finance-record finance-records)]
+        result (map adapters/internal->wire finance-records)]
     {:status 200 :body result :headers {"Content-Type" "application/json"}}))
 
 
@@ -37,7 +37,7 @@
         conn (:conn request)
         db (:db request)]
     (->> finance-record
-         (adapters/wire-finance-record->db)
+         (adapters/wire-in->internal)
          (controller/add-finance-record-db! db conn))
     {:status 201 :body {:payload finance-record, :message "Entry saved"}}))
 
@@ -55,7 +55,7 @@
         finance-record (assoc body-params :id (UUID/fromString id))
         conn (:conn request)]
     (->> finance-record
-         (adapters/wire-finance-record->db)
+         (adapters/wire-in->internal)
          (controller/update-finance-record-db! conn))
     {:status 201 :body {:payload finance-record, :message "Entry updated"}}))
 
